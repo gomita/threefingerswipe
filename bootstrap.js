@@ -201,11 +201,16 @@ var ThreeFingerSwipe = {
 				msg += " (" + BrowserApp.tabs.length + ")";
 				break;
 			case "close": 
-				if (BrowserApp.tabs.length == 1)
+				if (BrowserApp.tabs.length == 1) {
 					BrowserApp.loadURI("about:blank");
-				else
+					msg += " (1)";
+				}
+				else {
 					BrowserApp.closeTab(BrowserApp.selectedTab);
-				msg += " (" + BrowserApp.tabs.length + ")";
+					var curPos = BrowserApp.tabs.indexOf(BrowserApp.selectedTab);
+					var maxPos = BrowserApp.tabs.length - 1;
+					msg += " (" + ++curPos + "/" + ++maxPos + ")";
+				}
 				break;
 			case "prevtab": 
 			case "nexttab": 
