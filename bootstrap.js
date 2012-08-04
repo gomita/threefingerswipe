@@ -208,20 +208,16 @@ var ThreeFingerSwipe = {
 				msg += " (" + BrowserApp.tabs.length + ")";
 				break;
 			case "prevtab": 
-				var tabIds = BrowserApp.tabs.map(function(tab) tab.id);
-				var curPos = tabIds.indexOf(BrowserApp.selectedTab.id);
-				var lastPos = tabIds.length - 1;
-				var prevPos = curPos - 1 >= 0 ? curPos - 1 : lastPos;
-				BrowserApp.selectTab(BrowserApp.getTabForId(tabIds[prevPos]));
-				msg += " (" + (prevPos + 1) + "/" + (lastPos + 1) + ")";
-				break;
 			case "nexttab": 
-				var tabIds = BrowserApp.tabs.map(function(tab) tab.id);
-				var curPos = tabIds.indexOf(BrowserApp.selectedTab.id);
-				var lastPos = tabIds.length - 1;
-				var nextPos = curPos + 1 <= lastPos ? curPos + 1 : 0;
-				BrowserApp.selectTab(BrowserApp.getTabForId(tabIds[nextPos]));
-				msg += " (" + (nextPos + 1) + "/" + (lastPos + 1) + ")";
+				var curPos = BrowserApp.tabs.indexOf(BrowserApp.selectedTab);
+				var maxPos = BrowserApp.tabs.length - 1;
+				var newPos;
+				if (aCommand == "prevtab")
+					newPos = curPos - 1 >= 0 ? curPos - 1 : maxPos;
+				else
+					newPos = curPos + 1 <= maxPos ? curPos + 1 : 0;
+				BrowserApp.selectTab(BrowserApp.tabs[newPos]);
+				msg += " (" + ++newPos + "/" + ++maxPos + ")";
 				break;
 			case "search": 
 				var ret = { value: "" };
