@@ -176,14 +176,14 @@ var ThreeFingerSwipe = {
 					                (dx > 0 ? "right" : "left") : (dy > 0 ? "down" : "up");
 					// alert("direction: " + direction);
 					var command = this._branch.getCharPref(direction);
-					this._executeCommand(command, event.target.ownerDocument.defaultView);
+					this._executeCommand(command, event);
 				}
 				break;
 			default: 
 		}
 	},
 
-	_executeCommand: function(aCommand, aDOMWindow) {
+	_executeCommand: function(aCommand, aEvent) {
 		var msg = "";
 		var BrowserApp = this._window.BrowserApp;
 		switch (aCommand) {
@@ -224,6 +224,18 @@ var ThreeFingerSwipe = {
 				BrowserApp.selectTab(BrowserApp.tabs[newPos]);
 				msg += " (" + ++newPos + "/" + ++maxPos + ")";
 				break;
+			case "top": 
+			case "bottom": 
+				var doc = aEvent.target.ownerDocument;
+				// need to focus the window
+				doc.defaultView.focus();
+				var evt = doc.createEvent("KeyEvents");
+				evt.initKeyEvent(
+					"keypress", true, true, null, false, false, false, false, 
+					aCommand == "top" ? evt.DOM_VK_HOME : evt.DOM_VK_END, null
+				);
+				aEvent.target.dispatchEvent(evt);
+				break;
 			case "search": 
 				var ret = { value: "" };
 				var ok = Services.prompt.prompt(null, this._getString("search"), 
@@ -255,7 +267,7 @@ var ThreeFingerSwipe = {
 		var direction = directions[ret.value];
 		// 2. command
 		var commands = ["back", "forward", "reload", "blank", "close", 
-		                "prevtab", "nexttab", "search"];
+		                "prevtab", "nexttab", "top", "bottom", "search"];
 		// sort the commands to select the current command by default
 		var command = this._branch.getCharPref(direction);
 		commands.splice(commands.indexOf(command), 1);
