@@ -8,7 +8,9 @@ function install(data, reason) {
 }
 
 function uninstall(data, reason) {
-	ThreeFingerSwipe.uninstall();
+	// do nothing when the add-on is being upgraded / downgraded
+	if (reason == ADDON_UNINSTALL)
+		ThreeFingerSwipe.uninstall();
 }
 
 function startup(data, reason) {
@@ -91,12 +93,15 @@ var ThreeFingerSwipe = {
 
 	install: function() {
 		// XXXset default prefs (since defaults/prefereces/prefs.js doesn't work...)
-		// side effect: after updating the add-on, prefs will be reset to default.
 		var branch = Services.prefs.getBranch("extensions.threefingerswipe.");
-		branch.setCharPref("left", "prevtab");
-		branch.setCharPref("right", "nexttab");
-		branch.setCharPref("up", "blank");
-		branch.setCharPref("down", "close");
+		if (!branch.prefHasUserValue("left"))
+			branch.setCharPref("left", "prevtab");
+		if (!branch.prefHasUserValue("right"))
+			branch.setCharPref("right", "nexttab");
+		if (!branch.prefHasUserValue("up"))
+			branch.setCharPref("up", "blank");
+		if (!branch.prefHasUserValue("down"))
+			branch.setCharPref("down", "close");
 	},
 
 	uninstall: function() {
