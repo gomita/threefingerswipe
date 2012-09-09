@@ -89,7 +89,7 @@ var ThreeFingerSwipe = {
 	_branch: null,
 
 	// id of the menu item
-	_menuId: 0,
+	_menuId: null,
 
 	install: function() {
 		// XXXset default prefs (since defaults/prefereces/prefs.js doesn't work...)
@@ -136,7 +136,7 @@ var ThreeFingerSwipe = {
 	uninit: function(aWindow) {
 		log("uninit: " + aWindow.location.href);	// #debug
 		// remove menu item
-		if (this._menuId)
+		if (this._menuId != null)
 			aWindow.NativeWindow.menu.remove(this._menuId);
 		this._window = null;
 		this._bundle = null;
