@@ -7,7 +7,7 @@
 		<em:id>threefingerswipe@xuldev.org</em:id>
 		<em:type>2</em:type>
 		<em:name>Three Finger Swipe</em:name>
-		<em:version>0.5.1</em:version>
+		<em:version>0.5.2</em:version>
 		<em:bootstrap>true</em:bootstrap>
 		<em:description>Enables three-finger swipe gestures.</em:description>
 		<em:creator>Gomita</em:creator>
