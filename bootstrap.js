@@ -52,7 +52,12 @@ var windowListener = {
 			ThreeFingerSwipe.init(win);
 		}, false);
 	},
-	onCloseWindow: function(aWindow) {},
+	onCloseWindow: function(aWindow) {
+		log("onCloseWindow: " + aWindow);	// #debug
+		var win = aWindow.QueryInterface(Ci.nsIInterfaceRequestor).
+		                  getInterface(Ci.nsIDOMWindowInternal || Ci.nsIDOMWindow);
+		ThreeFingerSwipe.uninit(win);
+	},
 	onWindowTitleChange: function(aWindow) {},
 };
 
@@ -87,9 +92,6 @@ var ThreeFingerSwipe = {
 
 	// nsIPrefBranch
 	_branch: null,
-
-	// id of the menu item
-	_menuId: null,
 
 	install: function() {
 		// XXXset default prefs (since defaults/prefereces/prefs.js doesn't work...)
@@ -128,7 +130,7 @@ var ThreeFingerSwipe = {
 		// aWindow.BrowserApp.deck.addEventListener("touchcancel", this, false);
 		// aWindow.BrowserApp.deck.addEventListener("touchleave", this, false);
 		// add menu item
-		this._menuId = aWindow.NativeWindow.menu.add(this._getString("name"), null, function() {
+		aWindow._threeFingerSwipeMenuId = aWindow.NativeWindow.menu.add(this._getString("name"), null, function() {
 			ThreeFingerSwipe.config();
 		});
 	},
@@ -136,8 +138,8 @@ var ThreeFingerSwipe = {
 	uninit: function(aWindow) {
 		log("uninit: " + aWindow.location.href);	// #debug
 		// remove menu item
-		if (this._menuId != null)
-			aWindow.NativeWindow.menu.remove(this._menuId);
+		if (aWindow._threeFingerSwipeMenuId != null)
+			aWindow.NativeWindow.menu.remove(aWindow._threeFingerSwipeMenuId);
 		this._window = null;
 		this._bundle = null;
 		this._branch = null;
